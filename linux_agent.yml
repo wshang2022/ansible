@@ -1,0 +1,38 @@
+---
+- name: Download Fortress Agent and install
+  hosts: servers
+  vars_files:
+    - linux_setting.yml
+  tasks:
+   - name: Download Agent using uri
+#     become: yes
+     ansible.builtin.uri:
+       url: https://{{ appliance_ip }}/kotoba/rest/agentPackaging/downloadAgent/{{ agent_version }}/{{ os }}/{{ download_rpm_pkg }}
+       method: POST
+       user: "{{ appliance_url_user }}"
+       password: "{{ appliance_url_password }}"
+       validate_certs: false 
+       dest: /tmp/{{ rpm_pkg }}
+       force_basic_auth: true
+       mode: 0755
+   - name: Do not start agent automatically
+     become: yes
+     file:
+       path: /etc/bushido-do_not_start
+       state: touch
+   - name: install
+     become: yes
+     yum:
+       name: /tmp/{{ rpm_pkg }}
+       state: present
+       disable_gpg_check: true
+   - name: Register agent
+     become: yes
+     shell: ./registerAgent.sh {{ appliance_ip }}:443 {{ appliance_ip }}:443 {{ agent_domain }} "{{ agent_domain_desc }}"
+     args:
+       chdir: /home/bushido/components/agent/scripts
+   - name: cleanup
+     become: yes
+     file:
+       path: /etc/bushido-do_not_start
+       state: absent

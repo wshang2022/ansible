@@ -1,0 +1,9 @@
+appliance_ip: 10.2.3.205
+appliance_url_user: admin
+appliance_url_password: Floating@2022
+download_rpm_pkg: bushido-agent-ng-2-334-16-GA.x86_64.rpm
+agent_version: 2-334-16
+os: Redhat
+rpm_pkg: bushido-agent-ng.x86_64.rpm
+agent_domain: BUSHIDO-GENERAL
+agent_domain_desc: "Bushido Agent Group"

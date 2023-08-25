@@ -1,0 +1,11 @@
+# WinRM
+ansible_user: Administrator
+ansible_password: fr334a11@2018
+ansible_winrm_transport: basic
+ansible_winrm_scheme: http
+ansible_port: 5985
+ansible_connection: winrm
+appliance_ip: 10.2.3.205
+msi_pkg: BushidoAgent32-ng-2-334-17.msi
+win_agent_version: 2-334-17
+win_os: Windows

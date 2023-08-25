@@ -1,0 +1,31 @@
+---
+- name: Example for Bushido Windows Agent installation 
+  hosts: windows
+  vars_files:
+    - win_setting.yml
+  tasks:
+    - name: Prevent agent auto-start during installation
+      ansible.windows.win_regedit:
+        path: HKLM:\Software\bushido
+        name: DoNotStart
+        data: 1
+        type: binary
+    - name: Download the agent package
+      win_get_url:
+        url: https://{{ appliance_ip }}/kotoba/rest/agentPackaging/downloadAgent/{{ win_agent_version }}/{{ win_os }}/{{ msi_pkg }}
+        dest: C:\temp\BushidoAgent32.msi
+        force_basic_auth: true
+        url_method: POST
+        url_username: admin
+        url_password: Floating@2022
+        validate_certs: false
+        use_proxy: false
+    - name: Install agent
+      win_package:
+        path: C:\temp\BushidoAgent32-ng-233416.msi
+        state: present
+    - name: Remove registry flag so agent will restart correctly
+      ansible.windows.win_regedit:
+        path: HKLM:\Software\bushido
+        state: absent
+        delete_key: true
